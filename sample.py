@@ -22,5 +22,5 @@ for i_episode in range(config.NUM_EPISODES):
         if done:
             print("Episode finished after {} timesteps".format(t+1))
             break
-        sleep(1)
+        sleep(0.1)
 env.close()
