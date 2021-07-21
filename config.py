@@ -1,0 +1,3 @@
+# Learning Parameters
+NUM_EPISODES=20
+TIMESTEPS_PER_EPISODE=100
