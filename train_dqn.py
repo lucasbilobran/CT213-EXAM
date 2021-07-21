@@ -2,13 +2,15 @@ import os
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
+from gym import wrappers
 from dqn_agent import DQNAgent
 from utils import reward_engineering_mountain_car
 import tensorflow as tf
+import time
 
 
 NUM_EPISODES = 60 # Number of episodes used for training
-RENDER = True  # If the Mountain Car environment should be rendered
+RENDER = False  # If the Mountain Car environment should be rendered
 fig_format = 'png'  # Format used for saving matplotlib's figures
 # fig_format = 'eps'
 # fig_format = 'svg'
@@ -20,6 +22,7 @@ tf.compat.v1.disable_eager_execution()
 
 # Initiating the Mountain Car environment
 env = gym.make('Assault-ram-v0')
+# env = wrappers.Monitor(env, "./", video_callable=False ,force=True)
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
 
@@ -33,7 +36,7 @@ if os.path.exists('assault.h5'):
 else:
     print('No weights found from previous learning session.')
 done = False
-batch_size = 32  # batch size used for the experience replay
+batch_size = 64  # batch size used for the experience replay
 return_history = []
 
 for episodes in range(1, NUM_EPISODES + 1):
@@ -43,7 +46,9 @@ for episodes in range(1, NUM_EPISODES + 1):
     state = np.reshape(state, [1, state_size])
     # Cumulative reward is the return since the beginning of the episode
     cumulative_reward = 0.0
-    for time in range(1, 500):
+    # Time it
+    start_episode = time.time()
+    for mytime in range(1, 10000):
         if RENDER:
             env.render()  # Render the environment for visualization
         # Select action
@@ -61,11 +66,13 @@ for episodes in range(1, NUM_EPISODES + 1):
         cumulative_reward = agent.gamma * cumulative_reward + reward
         if done:
             print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
-                  .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon))
+                  .format(episodes, NUM_EPISODES, mytime, cumulative_reward, agent.epsilon))
             break
         # We only update the policy if we already have enough experience in memory
         if len(agent.replay_buffer) > 2 * batch_size:
             loss = agent.replay(batch_size)
+    end_episode = time.time()
+    print("It took {} to process the entire EPISODE".format(end_episode - start_episode))
     print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
           .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon))
     return_history.append(cumulative_reward)

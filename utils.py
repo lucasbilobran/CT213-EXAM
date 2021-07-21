@@ -21,7 +21,5 @@ def reward_engineering_mountain_car(state, action, reward, next_state, done, inf
     """
     reward *= 2
     reward += info["ale.lives"]
-    print(next_state-state)
-    sleep(3)
 
     return reward
