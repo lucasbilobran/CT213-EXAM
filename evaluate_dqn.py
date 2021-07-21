@@ -22,7 +22,7 @@ fig_format = 'png'  # Format used for saving matplotlib's figures
 # fig_format = 'svg'
 
 # Comment this line to enable training using your GPU
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+# os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 tf.compat.v1.disable_eager_execution()
 

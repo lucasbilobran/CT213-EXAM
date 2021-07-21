@@ -7,14 +7,14 @@ from utils import reward_engineering_mountain_car
 import tensorflow as tf
 
 
-NUM_EPISODES = 300  # Number of episodes used for training
-RENDER = False  # If the Mountain Car environment should be rendered
+NUM_EPISODES = 60 # Number of episodes used for training
+RENDER = True  # If the Mountain Car environment should be rendered
 fig_format = 'png'  # Format used for saving matplotlib's figures
 # fig_format = 'eps'
 # fig_format = 'svg'
 
 # Comment this line to enable training using your GPU
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+# os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 tf.compat.v1.disable_eager_execution()
 
@@ -49,11 +49,11 @@ for episodes in range(1, NUM_EPISODES + 1):
         # Select action
         action = agent.act(state)
         # Take action, observe reward and new state
-        next_state, reward, done, _ = env.step(action)
+        next_state, reward, done, info = env.step(action)
         # Reshaping to keep compatibility with Keras
         next_state = np.reshape(next_state, [1, state_size])
         # Making reward engineering to allow faster training
-        reward = reward_engineering_mountain_car(state[0], action, reward, next_state[0], done)
+        reward = reward_engineering_mountain_car(state[0], action, reward, next_state[0], done, info)
         # Appending this experience to the experience replay buffer
         agent.append_experience(state, action, reward, next_state, done)
         state = next_state
@@ -66,9 +66,11 @@ for episodes in range(1, NUM_EPISODES + 1):
         # We only update the policy if we already have enough experience in memory
         if len(agent.replay_buffer) > 2 * batch_size:
             loss = agent.replay(batch_size)
+    print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
+          .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon))
     return_history.append(cumulative_reward)
     agent.update_epsilon()
-    # Every 10 episodes, update the plot for training monitoring
+    # Every 20 episodes, update the plot for training monitoring
     if episodes % 20 == 0:
         plt.plot(return_history, 'b')
         plt.xlabel('Episode')

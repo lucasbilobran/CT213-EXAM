@@ -1,7 +1,8 @@
 START_POSITION_CAR = -0.5
+from time import sleep
 
 
-def reward_engineering_mountain_car(state, action, reward, next_state, done):
+def reward_engineering_mountain_car(state, action, reward, next_state, done, info):
     """
     Makes reward engineering to allow faster training in the Mountain Car environment.
 
@@ -18,16 +19,9 @@ def reward_engineering_mountain_car(state, action, reward, next_state, done):
     :return: modified reward for faster training.
     :rtype: float.
     """
-    if state[1] > 0.005 or state[1] < -0.05:
-        reward += (next_state[0]-state[0])*state[1]*10000
-    elif action == 1:
-        reward += 0.5
-
-    # success reward
-    if next_state[0] >= 0.5:
-        return reward + 50
-
-    if done:
-        return reward + 100
+    reward *= 2
+    reward += info["ale.lives"]
+    print(next_state-state)
+    sleep(3)
 
     return reward

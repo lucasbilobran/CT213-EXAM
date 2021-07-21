@@ -1,0 +1,5 @@
+numpy
+tensorflow
+matplotlib
+gym
+h5py==3.0.0
