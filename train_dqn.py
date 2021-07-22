@@ -2,14 +2,13 @@ import os
 import gym
 import numpy as np
 import matplotlib.pyplot as plt
-from gym import wrappers
 from dqn_agent import DQNAgent
 from utils import reward_engineering_mountain_car
 import tensorflow as tf
 import time
 
 
-NUM_EPISODES = 60 # Number of episodes used for training
+NUM_EPISODES = 140 # Number of episodes used for training
 RENDER = False  # If the Mountain Car environment should be rendered
 fig_format = 'png'  # Format used for saving matplotlib's figures
 # fig_format = 'eps'
@@ -21,8 +20,7 @@ fig_format = 'png'  # Format used for saving matplotlib's figures
 tf.compat.v1.disable_eager_execution()
 
 # Initiating the Mountain Car environment
-env = gym.make('Assault-ram-v0')
-# env = wrappers.Monitor(env, "./", video_callable=False ,force=True)
+env = gym.make('CartPole-v1')
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
 
@@ -30,13 +28,13 @@ action_size = env.action_space.n
 agent = DQNAgent(state_size, action_size)
 
 # Checking if weights from previous learning session exists
-if os.path.exists('assault.h5'):
+if os.path.exists('CartPole-v1.h5'):
     print('Loading weights from previous learning session.')
-    agent.load("assault.h5")
+    agent.load("CartPole-v1.h5")
 else:
     print('No weights found from previous learning session.')
 done = False
-batch_size = 64  # batch size used for the experience replay
+batch_size = 32  # batch size used for the experience replay
 return_history = []
 
 for episodes in range(1, NUM_EPISODES + 1):
@@ -48,17 +46,17 @@ for episodes in range(1, NUM_EPISODES + 1):
     cumulative_reward = 0.0
     # Time it
     start_episode = time.time()
-    for mytime in range(1, 10000):
+    for mytime in range(1, 500):
         if RENDER:
             env.render()  # Render the environment for visualization
         # Select action
         action = agent.act(state)
         # Take action, observe reward and new state
-        next_state, reward, done, info = env.step(action)
+        next_state, reward, done, _ = env.step(action)
         # Reshaping to keep compatibility with Keras
         next_state = np.reshape(next_state, [1, state_size])
         # Making reward engineering to allow faster training
-        reward = reward_engineering_mountain_car(state[0], action, reward, next_state[0], done, info)
+        reward = reward_engineering_mountain_car(state[0], action, reward, next_state[0], done, mytime)
         # Appending this experience to the experience replay buffer
         agent.append_experience(state, action, reward, next_state, done)
         state = next_state
@@ -73,8 +71,8 @@ for episodes in range(1, NUM_EPISODES + 1):
             loss = agent.replay(batch_size)
     end_episode = time.time()
     print("It took {} to process the entire EPISODE".format(end_episode - start_episode))
-    print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
-          .format(episodes, NUM_EPISODES, time, cumulative_reward, agent.epsilon))
+    # print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
+    #       .format(episodes, NUM_EPISODES, mytime, cumulative_reward, agent.epsilon))
     return_history.append(cumulative_reward)
     agent.update_epsilon()
     # Every 20 episodes, update the plot for training monitoring
@@ -86,5 +84,5 @@ for episodes in range(1, NUM_EPISODES + 1):
         plt.pause(0.1)
         plt.savefig('dqn_training.' + fig_format)
         # Saving the model to disk
-        agent.save("assault.h5")
+        agent.save("CartPole-v1.h5")
 plt.pause(1.0)
