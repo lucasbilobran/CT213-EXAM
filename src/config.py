@@ -1,7 +1,6 @@
-# Learning Parameters
+# Learning Parameters (Only used in sample.py)
 NUM_EPISODES=20
 TIMESTEPS_PER_EPISODE=100
-
 
 # CartPole State Variable Limits
 CART_POSITION = 4.8
