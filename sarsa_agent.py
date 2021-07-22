@@ -1,6 +1,7 @@
 import numpy as np
 from utils import build_state_table_size
 import config
+import h5py
 
 def compute_greedy_policy_as_table(q):
     """
@@ -178,6 +179,18 @@ class Sarsa(RLAlgorithm):
         q_s_a = self.q[state][action]
         self.q[state][action] = q_s_a  + \
                                 self.alpha*(reward+self.gamma*self.q[next_state][next_action]-q_s_a)
+
+    def save(self, filename):
+        hf = h5py.File(filename, 'w')
+        hf.create_dataset('q', data=self.q)
+        hf.close()
+
+    def load(self, filename):
+        hf = h5py.File(filename, 'r')
+        self.q = hf.get('q')[:]
+        hf.close()
+
+
 
 
 class QLearning(RLAlgorithm):

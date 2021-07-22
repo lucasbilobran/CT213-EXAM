@@ -1,11 +1,13 @@
 import gym
 import numpy as np
 from utils import reward_engineering_mountain_car
+import matplotlib.pyplot as plt
 from sarsa_agent import Sarsa, QLearning, greedy_action
 
 
-NUM_EPISODES = 140 # Number of episodes used for training
+NUM_EPISODES = 50000 # Number of episodes used for training
 RENDER = False  # If the Mountain Car environment should be rendered
+fig_format = 'png'
 
 # Initiating the Mountain Car environment
 rom = 'CartPole-v1'
@@ -18,6 +20,8 @@ gamma = 0.99  # discount factor
 
 # Creating the Sarsa agent
 agent = Sarsa(rom, state_size, action_size, epsilon, alpha, gamma)
+
+return_history = []
 
 # training
 for episodes in range(1, NUM_EPISODES + 1):
@@ -48,4 +52,18 @@ for episodes in range(1, NUM_EPISODES + 1):
             print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
                   .format(episodes, NUM_EPISODES, mytime, cumulative_reward, agent.epsilon))
             break
+    return_history.append(cumulative_reward)
+
+    if episodes % 500 == 0:
+        # Plot Results
+        plt.plot(return_history, 'b')
+        plt.xlabel('Episode')
+        plt.ylabel('Return')
+        plt.show(block=False)
+        plt.pause(0.1)
+        plt.savefig('sarsa_training.' + fig_format)
+
+    if episodes % 10000 == 0:
+        # Saving the model to disk
+        agent.save("SARSA-CartPole-v1.h5")
 

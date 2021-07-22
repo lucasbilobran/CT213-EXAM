@@ -5,7 +5,7 @@ from sarsa_agent import Sarsa, QLearning, greedy_action
 
 
 NUM_EPISODES = 30 # Number of episodes used for training
-RENDER = False  # If the Mountain Car environment should be rendered
+RENDER = True  # If the Mountain Car environment should be rendered
 
 # Initiating the Mountain Car environment
 rom = 'CartPole-v1'
@@ -18,6 +18,9 @@ gamma = 0.99  # discount factor
 
 # Creating the Sarsa agent
 agent = Sarsa(rom, state_size, action_size, epsilon, alpha, gamma)
+print('Loading Model')
+agent.load('SARSA-CartPole-v1.h5')
+print('DONE; Starting Evaluation')
 
 # playing
 for episodes in range(1, NUM_EPISODES + 1):
