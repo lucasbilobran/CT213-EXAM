@@ -2,9 +2,9 @@ import config
 START_POSITION_CAR = -0.5
 
 
-def reward_engineering_mountain_car(state, action, reward, next_state, done, episode_length):
+def reward_engineering(state, action, reward, next_state, done, episode_length):
     """
-    Makes reward engineering to allow faster training in the Mountain Car environment.
+    Makes reward engineering to allow faster training in the Environment.
 
     :param state: state.
     :type state: NumPy array with dimension (1, 2).
@@ -43,8 +43,8 @@ def reward_engineering_mountain_car(state, action, reward, next_state, done, epi
             abs(next_state[3]) < 0.01:
         reward += 100
 
-    if episode_length == 199:
-        print("UHUUL")
+    # if episode_length == 199:
+    #     print("UHUUL")
 
     return reward
 

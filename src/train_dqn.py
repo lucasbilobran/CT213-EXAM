@@ -3,13 +3,13 @@ import gym
 import numpy as np
 import matplotlib.pyplot as plt
 from dqn_agent import DQNAgent
-from utils import reward_engineering_mountain_car
+from utils import reward_engineering
 import tensorflow as tf
 import time
 
 
 NUM_EPISODES = 140 # Number of episodes used for training
-RENDER = False  # If the Mountain Car environment should be rendered
+RENDER = False  # If the Environment should be rendered
 fig_format = 'png'  # Format used for saving matplotlib's figures
 # fig_format = 'eps'
 # fig_format = 'svg'
@@ -19,7 +19,7 @@ fig_format = 'png'  # Format used for saving matplotlib's figures
 
 tf.compat.v1.disable_eager_execution()
 
-# Initiating the Mountain Car environment
+# Initiating the Environment
 env = gym.make('CartPole-v1')
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
@@ -56,7 +56,7 @@ for episodes in range(1, NUM_EPISODES + 1):
         # Reshaping to keep compatibility with Keras
         next_state = np.reshape(next_state, [1, state_size])
         # Making reward engineering to allow faster training
-        reward = reward_engineering_mountain_car(state[0], action, reward, next_state[0], done, mytime)
+        reward = reward_engineering(state[0], action, reward, next_state[0], done, mytime)
         # Appending this experience to the experience replay buffer
         agent.append_experience(state, action, reward, next_state, done)
         state = next_state

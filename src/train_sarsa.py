@@ -1,15 +1,15 @@
 import gym
 import numpy as np
-from utils import reward_engineering_mountain_car
+from utils import reward_engineering
 import matplotlib.pyplot as plt
 from sarsa_agent import Sarsa, QLearning, greedy_action
 
 
 NUM_EPISODES = 50000 # Number of episodes used for training
-RENDER = False  # If the Mountain Car environment should be rendered
+RENDER = False  # If the Environment should be rendered
 fig_format = 'png'
 
-# Initiating the Mountain Car environment
+# Initiating the Environment
 rom = 'CartPole-v1'
 env = gym.make('CartPole-v1')
 state_size = env.observation_space.shape[0]
@@ -40,7 +40,7 @@ for episodes in range(1, NUM_EPISODES + 1):
         next_state, reward, done, _ = env.step(action)
         next_state = np.reshape(next_state, [1, state_size])
         # Making reward engineering to allow faster training
-        reward = reward_engineering_mountain_car(state[0], action, reward, next_state[0], done, mytime)
+        reward = reward_engineering(state[0], action, reward, next_state[0], done, mytime)
         next_action = agent.get_exploratory_action(agent.map_state_to_table(next_state[0]))
         agent.learn(agent.map_state_to_table(state[0]), action, reward, agent.map_state_to_table(next_state[0]),
                     next_action)
