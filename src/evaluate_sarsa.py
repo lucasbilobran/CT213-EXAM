@@ -1,5 +1,7 @@
 import gym
+import os
 import numpy as np
+import matplotlib.pyplot as plt
 from utils import reward_engineering
 from sarsa_agent import Sarsa, QLearning, greedy_action
 
@@ -7,9 +9,16 @@ from sarsa_agent import Sarsa, QLearning, greedy_action
 NUM_EPISODES = 30 # Number of episodes used for training
 RENDER = True  # If the Environment should be rendered
 
-# Initiating the Environment
 rom = 'CartPole-v1'
-env = gym.make('CartPole-v1')
+#rom = 'MountainCar-v0'
+#rom = 'Assault-ram-v0'
+
+fig_format = 'png'
+# fig_format = 'eps'
+# fig_format = 'svg'
+
+# Initiating the Environment
+env = gym.make(rom)
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
 epsilon = 0.0  # epsilon of epsilon-greedy
@@ -18,9 +27,13 @@ gamma = 0.99  # discount factor
 
 # Creating the Sarsa agent
 agent = Sarsa(rom, state_size, action_size, epsilon, alpha, gamma)
-print('Loading Model')
-agent.load('../models/SARSA-CartPole-v1.h5')
-print('DONE; Starting Evaluation')
+# Checking if weights from previous learning session exists
+if os.path.exists('../models/SARSA-' + rom + '.h5'):
+    print('Loading weights from previous learning session.')
+    agent.load('../models/SARSA-' + rom + '.h5')
+else:
+    print('No weights found from previous learning session.')
+return_history = []
 
 # playing
 for episodes in range(1, NUM_EPISODES + 1):
@@ -49,4 +62,12 @@ for episodes in range(1, NUM_EPISODES + 1):
             print("episode: {}/{}, time: {}, score: {:.6}, epsilon: {:.3}"
                   .format(episodes, NUM_EPISODES, mytime, cumulative_reward, agent.epsilon))
             break
+    return_history.append(cumulative_reward)
+
+
+# Plots return history
+plt.plot(return_history, 'b')
+plt.xlabel('Episode')
+plt.ylabel('Return')
+plt.savefig('../plots/sarsa_evaluation_' + rom + '.' + fig_format, fig_format=fig_format)
 
