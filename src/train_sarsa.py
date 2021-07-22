@@ -8,11 +8,17 @@ from sarsa_agent import Sarsa, QLearning, greedy_action
 
 NUM_EPISODES = 50000 # Number of episodes used for training
 RENDER = False  # If the Environment should be rendered
+rom = 'CartPole-v1'
+#rom = 'MountainCar-v0'
+#rom = 'Assault-ram-v0'
+
 fig_format = 'png'
+# fig_format = 'eps'
+# fig_format = 'svg'
+
 
 # Initiating the Environment
-rom = 'CartPole-v1'
-env = gym.make('CartPole-v1')
+env = gym.make(rom)
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
 epsilon = 0.1  # epsilon of epsilon-greedy
@@ -23,9 +29,9 @@ gamma = 0.99  # discount factor
 agent = Sarsa(rom, state_size, action_size, epsilon, alpha, gamma)
 
 # Checking if weights from previous learning session exists
-if os.path.exists('../models/SARSA-CartPole-v1.h5'):
+if os.path.exists('../models/SARSA-' + rom + '.h5'):
     print('Loading weights from previous learning session.')
-    agent.load("../models/SARSA-CartPole-v1.h5")
+    agent.load('../models/SARSA-' + rom + '.h5')
 else:
     print('No weights found from previous learning session.')
 
@@ -69,9 +75,9 @@ for episodes in range(1, NUM_EPISODES + 1):
         plt.ylabel('Return')
         plt.show(block=False)
         plt.pause(0.1)
-        plt.savefig('../plots/sarsa_training.' + fig_format)
+        plt.savefig('../plots/sarsa_training_' + rom + '.' + fig_format)
 
     if episodes % 10000 == 0:
         # Saving the model to disk
-        agent.save("../models/SARSA-CartPole-v1.h5")
+        agent.save('../models/SARSA-' + rom + '.h5')
 

@@ -17,7 +17,12 @@ def plot_points(point_list, style):
 
 
 NUM_EPISODES = 30  # Number of episodes used for evaluation
-fig_format = 'png'  # Format used for saving matplotlib's figures
+
+rom = 'CartPole-v1'
+#rom = 'MountainCar-v0'
+#rom = 'Assault-ram-v0'
+
+fig_format = 'png'
 # fig_format = 'eps'
 # fig_format = 'svg'
 
@@ -27,7 +32,7 @@ fig_format = 'png'  # Format used for saving matplotlib's figures
 tf.compat.v1.disable_eager_execution()
 
 # Initiating the Environment
-env = gym.make('CartPole-v1')
+env = gym.make(rom)
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
 
@@ -35,9 +40,9 @@ action_size = env.action_space.n
 agent = DQNAgent(state_size, action_size, epsilon=0.0, epsilon_min=0.0)
 
 # Checking if weights from previous learning session exists
-if os.path.exists('../models/DQN-CartPole-v1.h5'):
+if os.path.exists('../models/DQN-' + rom + '.h5'):
     print('Loading weights from previous learning session.')
-    agent.load("../models/DQN-CartPole-v1.h5")
+    agent.load('../models/DQN-' + rom + '.h5')
 else:
     print('No weights found from previous learning session. Unable to proceed.')
     exit(-1)
@@ -77,7 +82,7 @@ print('Mean return: ', np.mean(return_history))
 plt.plot(return_history, 'b')
 plt.xlabel('Episode')
 plt.ylabel('Return')
-plt.savefig('../plots/dqn_evaluation.' + fig_format, fig_format=fig_format)
+plt.savefig('../plots/dqn_evaluation_' + rom + '.' + fig_format, fig_format=fig_format)
 
 # Plots the greedy policy learned by DQN
 plt.figure()
@@ -105,5 +110,5 @@ plt.xlabel('Position')
 plt.ylabel('Velocity')
 plt.title('Agent Policy')
 plt.legend(['Left', 'None', 'Right'])
-plt.savefig('../plots/agent_decision.' + fig_format, format=fig_format)
+plt.savefig('../plots/agent_decision_' + rom + '.' + fig_format, format=fig_format)
 plt.show()

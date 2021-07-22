@@ -10,7 +10,12 @@ import time
 
 NUM_EPISODES = 140 # Number of episodes used for training
 RENDER = False  # If the Environment should be rendered
-fig_format = 'png'  # Format used for saving matplotlib's figures
+
+rom = 'CartPole-v1'
+#rom = 'MountainCar-v0'
+#rom = 'Assault-ram-v0'
+
+fig_format = 'png'
 # fig_format = 'eps'
 # fig_format = 'svg'
 
@@ -20,7 +25,7 @@ fig_format = 'png'  # Format used for saving matplotlib's figures
 tf.compat.v1.disable_eager_execution()
 
 # Initiating the Environment
-env = gym.make('CartPole-v1')
+env = gym.make(rom)
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.n
 
@@ -28,9 +33,9 @@ action_size = env.action_space.n
 agent = DQNAgent(state_size, action_size)
 
 # Checking if weights from previous learning session exists
-if os.path.exists('../models/DQN-CartPole-v1.h5'):
+if os.path.exists('../models/DQN-' + rom + '.h5'):
     print('Loading weights from previous learning session.')
-    agent.load("../models/DQN-CartPole-v1.h5")
+    agent.load('../models/DQN-' + rom + '.h5')
 else:
     print('No weights found from previous learning session.')
 done = False
@@ -82,7 +87,7 @@ for episodes in range(1, NUM_EPISODES + 1):
         plt.ylabel('Return')
         plt.show(block=False)
         plt.pause(0.1)
-        plt.savefig('../plots/dqn_training.' + fig_format)
+        plt.savefig('../plots/dqn_training_' + rom + '.' + fig_format)
         # Saving the model to disk
-        agent.save("../models/CartPole-v1.h5")
+        agent.save('../models/DQN-' + rom + '.h5')
 plt.pause(1.0)
