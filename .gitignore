@@ -1,3 +1,6 @@
+# Outputs, Images and Models
+*.png
+
 .idea/
 
 # Byte-compiled / optimized / DLL files
