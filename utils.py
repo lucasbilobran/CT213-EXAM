@@ -1,3 +1,4 @@
+import config
 START_POSITION_CAR = -0.5
 
 
@@ -46,3 +47,15 @@ def reward_engineering_mountain_car(state, action, reward, next_state, done, epi
         print("UHUUL")
 
     return reward
+
+
+def build_state_table_size(state_size, rom):
+    if rom == 'CartPole-v1':
+        number_of_cart_pos = 2*round(config.CART_POSITION/config.CART_POSITION_RESOLUTION) + 1
+        number_of_cart_vel = 2*round(config.CART_VELOCITY/config.CART_VELOCITY_RESOLUTION) + 1
+        number_of_pole_angle = 2*round(config.POLE_ANGLE/config.POLE_ANGLE_RESOLUTION) + 1
+        number_of_pole_angular_vel = 2*round(config.POLE_ANGLE_VELOCITY/config.POLE_ANGLE_VELOCITY_RESOLUTION) + 1
+
+        return number_of_cart_pos * number_of_cart_vel * number_of_pole_angle * number_of_pole_angular_vel
+
+    return state_size
