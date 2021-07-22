@@ -8,7 +8,6 @@ from sarsa_agent import Sarsa, QLearning, greedy_action
 
 NUM_EPISODES = 50000 # Number of episodes used for training
 RENDER = False  # If the Environment should be rendered
-
 rom = 'CartPole-v1'
 #rom = 'MountainCar-v0'
 #rom = 'Assault-ram-v0'
