@@ -1,6 +1,4 @@
 import config
-START_POSITION_CAR = -0.5
-
 
 def reward_engineering(state, action, reward, next_state, done, episode_length):
     """

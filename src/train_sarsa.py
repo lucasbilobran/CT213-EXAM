@@ -1,5 +1,6 @@
 import gym
 import numpy as np
+import os
 from utils import reward_engineering
 import matplotlib.pyplot as plt
 from sarsa_agent import Sarsa, QLearning, greedy_action
@@ -20,6 +21,13 @@ gamma = 0.99  # discount factor
 
 # Creating the Sarsa agent
 agent = Sarsa(rom, state_size, action_size, epsilon, alpha, gamma)
+
+# Checking if weights from previous learning session exists
+if os.path.exists('../models/SARSA-CartPole-v1.h5'):
+    print('Loading weights from previous learning session.')
+    agent.load("../models/SARSA-CartPole-v1.h5")
+else:
+    print('No weights found from previous learning session.')
 
 return_history = []
 
@@ -61,9 +69,9 @@ for episodes in range(1, NUM_EPISODES + 1):
         plt.ylabel('Return')
         plt.show(block=False)
         plt.pause(0.1)
-        plt.savefig('sarsa_training.' + fig_format)
+        plt.savefig('../plots/sarsa_training.' + fig_format)
 
     if episodes % 10000 == 0:
         # Saving the model to disk
-        agent.save("SARSA-CartPole-v1.h5")
+        agent.save("../models/SARSA-CartPole-v1.h5")
 

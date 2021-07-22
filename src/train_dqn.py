@@ -28,9 +28,9 @@ action_size = env.action_space.n
 agent = DQNAgent(state_size, action_size)
 
 # Checking if weights from previous learning session exists
-if os.path.exists('CartPole-v1.h5'):
+if os.path.exists('../models/DQN-CartPole-v1.h5'):
     print('Loading weights from previous learning session.')
-    agent.load("CartPole-v1.h5")
+    agent.load("../models/DQN-CartPole-v1.h5")
 else:
     print('No weights found from previous learning session.')
 done = False
@@ -82,7 +82,7 @@ for episodes in range(1, NUM_EPISODES + 1):
         plt.ylabel('Return')
         plt.show(block=False)
         plt.pause(0.1)
-        plt.savefig('dqn_training.' + fig_format)
+        plt.savefig('../plots/dqn_training.' + fig_format)
         # Saving the model to disk
-        agent.save("CartPole-v1.h5")
+        agent.save("../models/CartPole-v1.h5")
 plt.pause(1.0)

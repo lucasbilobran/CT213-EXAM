@@ -19,7 +19,7 @@ gamma = 0.99  # discount factor
 # Creating the Sarsa agent
 agent = Sarsa(rom, state_size, action_size, epsilon, alpha, gamma)
 print('Loading Model')
-agent.load('SARSA-CartPole-v1.h5')
+agent.load('../models/SARSA-CartPole-v1.h5')
 print('DONE; Starting Evaluation')
 
 # playing

@@ -35,9 +35,9 @@ action_size = env.action_space.n
 agent = DQNAgent(state_size, action_size, epsilon=0.0, epsilon_min=0.0)
 
 # Checking if weights from previous learning session exists
-if os.path.exists('CartPole-v1.h5'):
+if os.path.exists('../models/DQN-CartPole-v1.h5'):
     print('Loading weights from previous learning session.')
-    agent.load("CartPole-v1.h5")
+    agent.load("../models/DQN-CartPole-v1.h5")
 else:
     print('No weights found from previous learning session. Unable to proceed.')
     exit(-1)
@@ -77,7 +77,7 @@ print('Mean return: ', np.mean(return_history))
 plt.plot(return_history, 'b')
 plt.xlabel('Episode')
 plt.ylabel('Return')
-plt.savefig('dqn_evaluation.' + fig_format, fig_format=fig_format)
+plt.savefig('../plots/dqn_evaluation.' + fig_format, fig_format=fig_format)
 
 # Plots the greedy policy learned by DQN
 plt.figure()
@@ -105,5 +105,5 @@ plt.xlabel('Position')
 plt.ylabel('Velocity')
 plt.title('Agent Policy')
 plt.legend(['Left', 'None', 'Right'])
-plt.savefig('agent_decision.' + fig_format, format=fig_format)
+plt.savefig('../plots/agent_decision.' + fig_format, format=fig_format)
 plt.show()
